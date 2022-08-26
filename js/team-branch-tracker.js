@@ -17,13 +17,11 @@ columns.forEach(column => {
 let dragItem = null;
 
 function dragStart() {
-    console.log('drag started');
     dragItem = this;
     setTimeout(() => this.className = 'invisible', 0);
 }
 
 function dragEnd() {
-    console.log('drag ended');
     this.className = 'item';
     dragItem = null;
 }
@@ -31,12 +29,12 @@ function dragEnd() {
 // The dragover event must be overridden for the drop event to be fired correctly.
 function dragOver(e) {
     e.preventDefault();
-    console.log('drag over');
 }
 
 function dragDrop() {
-    console.log('drag dropped');
-    this.append(dragItem);
+    if (dragItem) {
+        this.append(dragItem);
+    }
 }
 
 // Unused but could be used for styling on enter and exit (shimmer/throb/colour-shift effect)
