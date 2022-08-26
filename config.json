@@ -1,0 +1,29 @@
+{
+  "people": [{
+    "name":"Tim",
+    "description":"BLAH"
+  }, {
+    "name":"Bob",
+    "description":"Bleh"
+  }, {
+    "name":"Sarah",
+    "description":"Bruh"
+  }, {
+    "name":"Jim",
+    "description":"Bro"
+  }],
+
+  "teams": [{
+    "name":"team-one",
+    "description":"1️⃣"
+  }, {
+    "name":"team-two",
+    "description":"2️⃣"
+  }, {
+    "name":"team-three",
+    "description":"3️⃣"
+  }, {
+    "name":"team-four",
+    "description":"4️⃣"
+  }]
+}

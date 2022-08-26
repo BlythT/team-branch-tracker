@@ -1,22 +1,43 @@
-const items = document.querySelectorAll('.item');
-const columns = document.querySelectorAll('.column');
+$.getJSON("config.json", function(config) {
+    const defaultColumn = $('.default-column')
+    console.log(config)
+    if (config.hasOwnProperty('people')) {
+        config.people.forEach(personData => {
+            var test = $('<div/>').addClass('item').html(personData.name)
+            test.attr('draggable', 'true')
+            defaultColumn.append(test)
+        })
 
-items.forEach(item => {
-    item.addEventListener('dragstart', dragStart);
-    item.addEventListener('dragend', dragEnd);
+        // Wait for async getJSON before querying for items
+        init()
+    }
 });
 
-columns.forEach(column => {
-    column.addEventListener('drop', dragDrop);
-    column.addEventListener('dragover', dragOver);
 
-    // column.addEventListener('dragenter', dragEnter);
-    // column.addEventListener('dragleave', dragLeave);
-});
+
+function init() {
+    const items = $('.item');
+    const columns = $('.column');
+    
+    items.each(function () {
+        this.addEventListener('dragstart', dragStart);
+        this.addEventListener('dragend', dragEnd);
+    });
+    
+    columns.each(function () {
+        this.addEventListener('drop', dragDrop);
+        this.addEventListener('dragover', dragOver);
+    
+        // this.addEventListener('dragenter', dragEnter);
+        // this.addEventListener('dragleave', dragLeave);
+    });
+}
+
 
 let dragItem = null;
 
 function dragStart() {
+    console.log('dragstart')
     dragItem = this;
     setTimeout(() => this.className = 'invisible', 0);
 }
