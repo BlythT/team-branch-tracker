@@ -3,17 +3,21 @@ $.getJSON("config.json", function(config) {
     console.log(config)
     if (config.hasOwnProperty('people')) {
         config.people.forEach(personData => {
-            var test = $('<div/>').addClass('item').html(personData.name)
-            test.attr('draggable', 'true')
-            defaultColumn.append(test)
-        })
-
-        // Wait for async getJSON before querying for items
-        init()
+            var person = $('<div/>').addClass('item').html(personData.name).attr('draggable', 'true');
+            defaultColumn.append(person);
+        });
     }
+
+    if (config.hasOwnProperty('teams')) {
+        const container = $('.container')
+        config.teams.forEach(teamData => {
+            var team = $('<div/>').addClass('column').append('<h1>' + teamData.name + '</h1>')
+            container.append(team)
+        });
+    }
+    // Wait for async getJSON before querying for items
+    init()
 });
-
-
 
 function init() {
     const items = $('.item');
