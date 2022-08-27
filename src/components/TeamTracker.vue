@@ -33,11 +33,6 @@ export default {
       this.dragItem = null;
     },
 
-    // The dragover event must be overridden for the drop event to be fired correctly.
-    dragOver(e) {
-      e.preventDefault();
-    },
-
     dragDrop(e) {
       if (this.dragItem) {
         e.target.append(this.dragItem);
@@ -63,7 +58,7 @@ export default {
 <template>
   <main>
     <div class="container">
-      <ul class="column default-column" @dragover="dragOver" @drop="dragDrop">
+      <ul class="column default-column" @dragover.prevent @drop="dragDrop">
         <h1>Unassigned</h1>
         <li
           class="item"
@@ -80,7 +75,7 @@ export default {
         class="column"
         v-for="branch in branches"
         :key="branch.name"
-        @dragover="dragOver"
+        @dragover.prevent
         @drop.self="dragDrop"
       >
         <h1>{{ branch.name }}</h1>
