@@ -1,0 +1,35 @@
+{
+  "name": "team-branch-tracker",
+  "version": "1.0.0",
+  "description": "See who's working on what, when, where, and how... or something along those lines",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BlythT/team-branch-tracker.git"
+  },
+  "author": "Tim Blyth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BlythT/team-branch-tracker/issues"
+  },
+  "homepage": "https://github.com/BlythT/team-branch-tracker#readme",
+  "dependencies": {
+    "jquery": "^3.6.1",
+    "vue": "^3.2.37"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@vitejs/plugin-vue": "^3.0.1",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "eslint": "^8.21.0",
+    "eslint-plugin-vue": "^9.3.0",
+    "prettier": "^2.7.1",
+    "vite": "^3.0.4"
+  }
+}
