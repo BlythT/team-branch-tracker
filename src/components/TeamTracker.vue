@@ -1,79 +1,59 @@
 <script>
-import $ from "jquery";
-$.getJSON("config.json", function (config) {
-  const defaultColumn = $(".default-column");
-  console.log(config);
-  if (Object.prototype.hasOwnProperty.call(config, "people")) {
-    config.people.forEach((personData) => {
-      var person = $("<li/>")
-        .addClass("item")
-        .html(personData.name)
-        .attr("draggable", "true");
-      defaultColumn.append(person);
-    });
-  }
+import config from "../../config.json";
 
-  if (Object.prototype.hasOwnProperty.call(config, "teams")) {
-    const container = $(".container");
-    config.teams.forEach((teamData) => {
-      var team = $("<ul/>")
-        .addClass("column")
-        .append("<h1>" + teamData.name + "</h1>");
-      container.append(team);
-    });
-  }
-  // Wait for async getJSON before querying for items
-  init();
-});
+export default {
+  data() {
+    let people = [];
+    let teams = [];
+    if (Object.prototype.hasOwnProperty.call(config, "people")) {
+      config.people.forEach((personData, index) => {
+        people.push({ id: index, name: personData.name });
+      });
+    }
 
-function init() {
-  const items = $(".item");
-  const columns = $(".column");
+    if (Object.prototype.hasOwnProperty.call(config, "teams")) {
+      config.teams.forEach((branch) => {
+        teams.push({ name: branch.name });
+      });
 
-  items.each(function () {
-    this.addEventListener("dragstart", dragStart);
-    this.addEventListener("dragend", dragEnd);
-  });
-  columns.each(function () {
-    this.addEventListener("drop", dragDrop);
-    this.addEventListener("dragover", dragOver);
-    // this.addEventListener('dragenter', dragEnter);
-    // this.addEventListener('dragleave', dragLeave);
-  });
-}
+      return {
+        people: people,
+        branches: teams,
+        dragItem: null,
+      };
+    }
+  },
+  methods: {
+    dragStart(e) {
+      this.dragItem = e.target;
+      setTimeout(() => (this.className = "invisible"), 0);
+    },
 
-let dragItem = null;
+    dragEnd() {
+      this.dragItem = null;
+    },
 
-function dragStart() {
-  console.log("dragstart");
-  dragItem = this;
-  setTimeout(() => (this.className = "invisible"), 0);
-}
+    // The dragover event must be overridden for the drop event to be fired correctly.
+    dragOver(e) {
+      e.preventDefault();
+    },
 
-function dragEnd() {
-  this.className = "item";
-  dragItem = null;
-}
+    dragDrop(e) {
+      if (this.dragItem) {
+        e.target.append(this.dragItem);
+      }
+    },
 
-// The dragover event must be overridden for the drop event to be fired correctly.
-function dragOver(e) {
-  e.preventDefault();
-}
+    // Unused but could be used for styling on enter and exit (shimmer/throb/colour-shift effect)
+    // dragEnter() {
+    //   console.log("drag entered");
+    // },
 
-function dragDrop() {
-  if (dragItem) {
-    this.append(dragItem);
-  }
-}
-
-// Unused but could be used for styling on enter and exit (shimmer/throb/colour-shift effect)
-// function dragEnter() {
-//     console.log('drag entered');
-// }
-
-// function dragLeave() {
-//     console.log('drag left');
-// }
+    // dragLeave() {
+    //   console.log("drag left");
+    // },
+  },
+};
 </script>
 
 <style>
@@ -83,8 +63,27 @@ function dragDrop() {
 <template>
   <main>
     <div class="container">
-      <ul class="column default-column">
+      <ul class="column default-column" @dragover="dragOver" @drop="dragDrop">
         <h1>Unassigned</h1>
+        <li
+          class="item"
+          draggable="true"
+          v-for="person in people"
+          :key="person.id"
+          @dragstart="dragStart"
+          @dragend="dragEnd"
+        >
+          {{ person.name }}
+        </li>
+      </ul>
+      <ul
+        class="column"
+        v-for="branch in branches"
+        :key="branch.name"
+        @dragover="dragOver"
+        @drop.self="dragDrop"
+      >
+        <h1>{{ branch.name }}</h1>
       </ul>
     </div>
   </main>
