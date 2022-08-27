@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/BlythT/team-branch-tracker#readme",
   "dependencies": {
-    "jquery": "^3.6.1",
     "vue": "^3.2.37"
   },
   "devDependencies": {
