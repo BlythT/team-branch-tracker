@@ -10,6 +10,7 @@
     min-height: 90vh;
     padding: 20px;
     border-radius: 10px;
+    list-style: none;
 }
 
 .column h1{

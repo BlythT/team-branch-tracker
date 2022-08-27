@@ -5,7 +5,7 @@ $.getJSON("config.json", function (config) {
   console.log(config);
   if (Object.prototype.hasOwnProperty.call(config, "people")) {
     config.people.forEach((personData) => {
-      var person = $("<div/>")
+      var person = $("<li/>")
         .addClass("item")
         .html(personData.name)
         .attr("draggable", "true");
@@ -16,7 +16,7 @@ $.getJSON("config.json", function (config) {
   if (Object.prototype.hasOwnProperty.call(config, "teams")) {
     const container = $(".container");
     config.teams.forEach((teamData) => {
-      var team = $("<div/>")
+      var team = $("<ul/>")
         .addClass("column")
         .append("<h1>" + teamData.name + "</h1>");
       container.append(team);
@@ -83,9 +83,9 @@ function dragDrop() {
 <template>
   <main>
     <div class="container">
-      <div class="column default-column">
+      <ul class="column default-column">
         <h1>Unassigned</h1>
-      </div>
+      </ul>
     </div>
   </main>
 </template>
