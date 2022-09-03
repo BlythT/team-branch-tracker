@@ -1,29 +1,54 @@
 {
   "people": [{
+    "id": 1,
     "name":"Tim",
     "description":"BLAH"
   }, {
+    "id": 2,
     "name":"Bob",
     "description":"Bleh"
   }, {
+    "id": 3,
     "name":"Sarah",
     "description":"Bruh"
   }, {
+    "id": 4,
     "name":"Jim",
     "description":"Bro"
   }],
 
   "teams": [{
+    "id": 1,
     "name":"team-one",
     "description":"1️⃣"
   }, {
+    "id": 2,
     "name":"team-two",
     "description":"2️⃣"
   }, {
+    "id": 3,
     "name":"team-three",
     "description":"3️⃣"
   }, {
+    "id": 4,
     "name":"team-four",
     "description":"4️⃣"
+  }],
+
+  "state": [{
+    "teamid": 1,
+    "people": [4]
+  },
+  {
+    "teamid": 5,
+    "people": [3,1]
+  },
+  {
+    "teamid": 3,
+    "people": []
+  },
+  {
+    "teamid": 4,
+    "people": [2]
   }]
 }
