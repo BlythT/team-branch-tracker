@@ -110,7 +110,7 @@ export default {
           @dragstart="dragStart"
           @dragend="dragEnd"
         >
-          {{ personid }}
+          {{ getPerson(personid).name }}
         </li>
       </ul>
     </div>
