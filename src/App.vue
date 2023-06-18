@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1>Kanban Board</h1>
+    <h1>Team Tracker</h1>
     <KanbanBoard />
   </div>
 </template>

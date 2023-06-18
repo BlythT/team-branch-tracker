@@ -1,27 +1,43 @@
+<script setup>
+import { Container, Draggable } from 'vue3-smooth-dnd'
+</script>
+
 <template>
   <div>
     <div class="kanban-board">
-      <div class="column">
-        <h2>Unassigned</h2>
-        <div class="card" v-for="(card, index) in unassignedCards" :key="index">
-          {{ card.name }}
-          <button class="delete-button" @click="removeCard('unassigned', index)">🗑</button>
+      <div class="card-column">
+        <div class="card-column-header">
+          <h2>Unassigned</h2>
         </div>
+        <Container group-name="col-items" class="col-drag-container" :get-child-payload="getCardPayload('unassigned')" @drop="(e) => onCardDrop('unassigned', e)">
+          <Draggable class="card" v-for="(card, cardIndex) in unassignedColumn.cards" :key="cardIndex">
+            <div >
+              {{ card.name }}
+              <button class="delete-button" @click="removeCard('unassigned', cardIndex)" >🗑</button>
+            </div>
+          </Draggable>
+        </Container>
       </div>
-      <div class="column" v-for="(column, index) in columns" :key="index">
-        <h2 v-if="column.name !== ''">{{ column.name }}</h2>
-        <h2 v-else>Column {{index}}</h2>
-        <button class="delete-button" @click="removeColumn(index)">🗑</button>
-        <button @click="addCardToColumn(index)">Add Card</button>
-        <div class="card" v-for="(card, cardIndex) in column.cards" :key="cardIndex">
-          {{ card.name }}
-          <button class="delete-button" @click="removeCard(`columns/${index}`, cardIndex)">🗑</button>
+      <div class="card-column" v-for="(column, columnIndex) in columns" :key="columnIndex">
+        <div class="card-column-header">
+          <h2 v-if="column.name !== ''">{{ column.name }}</h2>
+          <h2 v-else>Column {{columnIndex}}</h2>
+          <button class="delete-button" @click="removeColumn(columnIndex)">🗑</button>
+          <button @click="addCardToColumn(columnIndex)">Add Card</button>
         </div>
+        <Container group-name="col-items" class="col-drag-container" :get-child-payload="getCardPayload(columnIndex)" @drop="(e) => onCardDrop(columnIndex, e)">
+          <Draggable v-for="(card, cardIndex) in column.cards" :key="cardIndex">
+            <div class="card">
+              {{ card.name }}
+              <button class="delete-button" @click="removeCard(columnIndex, cardIndex)">🗑</button>
+            </div>
+          </Draggable>
+        </Container>
       </div>
     </div>
     <div>
     <div class="add-card-container">
-      <form @submit.prevent="addCard()">
+      <form @submit.prevent="addCardToColumn('unassigned')">
         <input type="text" v-model="newCardName" placeholder="Enter a new card name" required>
         <button type="submit">Add Card</button>
       </form>
@@ -38,7 +54,7 @@
 
 <script>
 import db from '../firebase.js';
-import { ref, onValue, push, remove } from 'firebase/database';
+import { ref, onValue, set} from 'firebase/database';
 
 function randomName() {
   return Math.random().toString(36).substring(7);
@@ -47,7 +63,7 @@ function randomName() {
 export default {
   data() {
     return {
-      unassignedCards: [],
+      unassignedColumn: [],
       columns: [],
       newCardName: '',
       newColumnName: '',
@@ -55,27 +71,25 @@ export default {
   },
   created() {
     const columnsRef = ref(db, 'columns');
-    const unassignedRef = ref(db, 'unassigned/cards');
+    const unassignedRef = ref(db, 'unassigned');
 
     onValue(unassignedRef, (snapshot) => {
       const unassignedData = snapshot.val();
-      console.log(unassignedData)
 
       if (unassignedData === null || !unassignedData) {
-        this.unassignedCards = [];
+        this.unassignedColumn = [];
+      } else {
+        this.unassignedColumn = unassignedData;
       }
-
-      this.unassignedCards = unassignedData
     });
 
     onValue(columnsRef, (snapshot) => {
       const columnsData = snapshot.val();
-      console.log(columnsData)
       if (columnsData === null || !columnsData) {
         this.columns = [];
+      } else {
+        this.columns = columnsData;
       }
-
-      this.columns = columnsData;
     });
   },
   methods: {
@@ -87,7 +101,8 @@ export default {
         cards: [],
       };
 
-      push(columnsRef, newColumn)
+      this.columns.push(newColumn)
+      set(columnsRef, this.columns)
           .then(() => {
             this.newColumnName = '';
           })
@@ -95,51 +110,109 @@ export default {
             console.error('Failed to add column:', error);
           });
     },
-    addCard() {
-      console.log('add card')
-      const unassignedRef = ref(db, 'unassigned/cards');
+    addCardToColumn(columnIndex) {
+      let columnRef = ref(db, `columns/${columnIndex}/cards`);
+      let targetColumn = this.columns[columnIndex];
+
+      // special case for unassigned column
+      if (columnIndex === 'unassigned') {
+        columnRef = ref(db, 'unassigned/cards');
+        targetColumn = this.unassignedColumn;
+      }
+      console.log(`add card to column ${columnIndex}`)
+
       const newCard = {
         name: this.newCardName,
       };
 
-      push(unassignedRef, newCard)
+      if (!targetColumn.cards) {
+        targetColumn.cards = [];
+      }
+      targetColumn.cards.push(newCard)
+      set(columnRef, targetColumn.cards)
           .then(() => {
             this.newCardName = '';
           })
           .catch((error) => {
-            console.error('Failed to add card:', error);
+            console.error('Failed to add card to column:', error);
           });
     },
-    addCardToColumn(index) {
-      console.log(`add card to column ${index}`)
-      const columnRef = ref(db, `columns/${index}/cards`);
-      const newCard = {
-        name: randomName(),
-      };
+    addCardToColumnAtIndex(card, columnIndex, cardIndex) {
+      let columnRef = ref(db, `columns/${columnIndex}/cards`);
+      let targetColumn = this.columns[columnIndex];
+      // special case for unassigned column
+      if (columnIndex === 'unassigned') {
+        columnRef = ref(db, 'unassigned/cards');
+        targetColumn = this.unassignedColumn;
+      }
 
-      push(columnRef, newCard)
+      console.log(`add card to column ${columnIndex} at index ${cardIndex}`)
+
+      if (!targetColumn.cards) {
+        targetColumn.cards = [];
+      }
+      targetColumn.cards.splice(cardIndex, 0, card)
+      set(columnRef, targetColumn.cards)
           .catch((error) => {
             console.error('Failed to add card to column:', error);
           });
     },
-    removeColumn(column) {
-      console.log(`remove column ${column}`)
-      const columnRef = ref(db, `columns/${column}`);
+    removeColumn(index) {
+      console.log(`remove column ${index}`)
+      const columnRef = ref(db, `columns`);
 
-      remove(columnRef)
+      this.columns.splice(index, 1)
+      set(columnRef, this.columns)
           .catch((error) => {
             console.error('Failed to remove column:', error);
           });
     },
-    removeCard(location, card) {
-      console.log(`remove card ${location} ${card}`)
-      const cardRef = ref(db, `${location}/cards/${card}`);
+    removeCard(columnIndex, cardIndex) {
+      console.log(`remove card ${location} ${cardIndex}`)
+      let cardRef = ref(db, `columns/${columnIndex}/cards`);
+      let targetColumn = this.columns[columnIndex];
+      // special case for unassigned column
+      if (columnIndex === 'unassigned') {
+        cardRef = ref(db, 'unassigned/cards');
+        targetColumn = this.unassignedColumn;
+      }
+      
+      if (!targetColumn.cards) {
+        return
+      }
 
-      remove(cardRef)
+      targetColumn.cards.splice(cardIndex, 1)
+      set(cardRef, targetColumn.cards)
           .catch((error) => {
             console.error('Failed to remove card:', error);
           });
     },
+    onCardDrop(column, dropResult) {
+      if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
+        if (dropResult.removedIndex !== null) {
+          console.log(`remove ` + JSON.stringify(dropResult.payload) + ` at index ${dropResult.removedIndex} from column ${column}`)
+          this.removeCard(column, dropResult.removedIndex)
+        }
+        if (dropResult.addedIndex !== null) {
+          console.log(`add ` + JSON.stringify(dropResult.payload) + ` at index ${dropResult.addedIndex} to column ${column}`)
+          this.addCardToColumnAtIndex(dropResult.payload, column, dropResult.addedIndex)
+        }
+      }
+    },
+    getCardPayload(colIndex) {
+      return cardIndex => {
+        switch (colIndex) {
+          case 'unassigned':
+            console.log(`get card payload ${colIndex} ${cardIndex}`)
+            console.log(this.unassignedColumn.cards[cardIndex])
+            return this.unassignedColumn.cards[cardIndex];
+          default:
+            console.log(`get card payload ${colIndex} ${cardIndex}`)
+            console.log(this.columns[colIndex].cards[cardIndex])
+            return this.columns[colIndex].cards[cardIndex];
+        }
+      };
+    }
   },
 };
 </script>
@@ -149,7 +222,13 @@ export default {
   display: flex;
 }
 
-.column {
+.col-drag-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-column {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -171,8 +250,7 @@ export default {
   min-height: 100px; /* Adjust the value as per your preference */
 }
 
-.delete-button i {
-  color: red;
+.delete-button {
 }
 
 .add-card-container {
