@@ -291,6 +291,10 @@ body {
   align-items: center;
 }
 
+.card-column-header {
+  position: relative;
+}
+
 .delete-button {
   outline: none;
   border: none;
