@@ -265,7 +265,6 @@ body {
 .card-column {
   display: flex;
   flex-direction: column;
-  flex: 1;
   background-color: #f2f2f2;
   border-radius: 5px;
   padding: 10px;
@@ -274,30 +273,6 @@ body {
   vertical-align: top;
   min-width: 200px;
   min-height: 510px;
-}
-
-.card-column-header {
-  position: relative;
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 5px 5px 0 0;
-  font-weight: bold;
-  color: #000000;
-  margin-bottom: 10px;
-}
-
-.card-column-header::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-  pointer-events: none;
-  z-index: -1;
-  border-radius: inherit;
 }
 
 .card {
