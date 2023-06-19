@@ -52,20 +52,20 @@ import { Container, Draggable } from 'vue3-smooth-dnd'
         </Container>
       </div>
     </div>
-    <div>
-    <div class="add-card-container">
-      <form @submit.prevent="addCardToColumn('unassigned')">
-        <input type="text" v-model="newCardName" placeholder="Enter a new card name" required>
-        <button type="submit">Add Card</button>
-      </form>
+    <div class="input-container">
+      <div class="add-card-container">
+        <form @submit.prevent="addCardToColumn('unassigned')">
+          <input type="text" v-model="newCardName" placeholder="Enter a new card name" required>
+          <button type="submit">Add Card</button>
+        </form>
+      </div>
+      <div class="add-column-container">
+        <form @submit.prevent="addColumn">
+          <input type="text" v-model="newColumnName" placeholder="Enter a new column name" required>
+          <button type="submit">Add Column</button>
+        </form>
+      </div>
     </div>
-  </div>
-  <div class="add-column-container">
-    <form @submit.prevent="addColumn">
-      <input type="text" v-model="newColumnName" placeholder="Enter a new column name" required>
-      <button type="submit">Add Column</button>
-    </form>
-  </div>
   </div>
 </template>
 
@@ -235,8 +235,25 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&display=swap');
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
 .kanban-board {
   display: flex;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #e0e0e0;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+  margin-top: 20px;
 }
 
 .col-drag-container {
@@ -249,20 +266,48 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 10px;
-  margin: 10px;
-  border: 1px solid #ccc;
+  background-color: #f2f2f2;
   border-radius: 5px;
-  min-width: 200px; /* Adjust the value as per your preference */
-  min-height: 500px; /* Adjust the value as per your preference */
+  padding: 10px;
+  margin-right: 20px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+  vertical-align: top;
+  min-width: 200px;
+  min-height: 510px;
+}
+
+.card-column-header {
+  position: relative;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 5px 5px 0 0;
+  font-weight: bold;
+  color: #000000;
+  margin-bottom: 10px;
+}
+
+.card-column-header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
 }
 
 .card {
   position: relative;
+  background-color: #e0e0e0;
+  color: #000000;
   padding: 10px;
-  margin: 5px 0;
-  background-color: #f0f0f0;
   border-radius: 5px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+  margin: 5px 0;
   min-width: 180px; /* Adjust the value as per your preference */
   min-height: 100px; /* Adjust the value as per your preference */
   display: flex;
@@ -286,21 +331,44 @@ export default {
   border: none;
   cursor: pointer;
   background: none;
+  position: absolute;
+  top: 5px;
+  right: -2px;
 }
 
 .add-card-container {
   display: flex;
   align-items: center;
   margin-top: 10px;
+  margin-right: 20px;
 }
 
 .add-card-container input {
-  flex: 1;
-  margin-right: 10px;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  color: #000000;
 }
 
 .add-card-container button {
-  padding: 5px 10px;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+  font-size: 16px;
+  color: #000000;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.add-card-container button:active {
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  transform: scale(0.95);
 }
 
 .add-column-container {
@@ -310,23 +378,31 @@ export default {
 }
 
 .add-column-container input {
-  flex: 1;
-  margin-right: 10px;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  color: #000000;
 }
 
 .add-column-container button {
-  padding: 5px 10px;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+  font-size: 16px;
+  color: #000000;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
 }
 
-.card-column-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+.add-column-container button:active {
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  transform: scale(0.95);
 }
 
-/* Optional styles */
-.card-column-header h2 {
-  margin-right: 10px;
-}
 </style>
