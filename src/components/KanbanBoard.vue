@@ -185,7 +185,7 @@ export default {
           });
     },
     removeCard(columnIndex, cardIndex) {
-      console.log(`remove card ${location} ${cardIndex}`)
+      console.log(`remove card ${columnIndex} ${cardIndex}`)
       let cardRef = ref(db, `columns/${columnIndex}/cards`);
       let targetColumn = this.columns[columnIndex];
       // special case for unassigned column
