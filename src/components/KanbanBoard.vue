@@ -10,10 +10,16 @@ import { Container, Draggable } from 'vue3-smooth-dnd'
           <h2>Unassigned</h2>
         </div>
         <Container group-name="col-items" class="col-drag-container" :get-child-payload="getCardPayload('unassigned')" @drop="(e) => onCardDrop('unassigned', e)">
-          <Draggable class="card" v-for="(card, cardIndex) in unassignedColumn.cards" :key="cardIndex">
-            <div >
+          <Draggable v-for="(card, cardIndex) in unassignedColumn.cards" :key="cardIndex">
+            <div class="card">
               {{ card.name }}
-              <button class="delete-button" @click="removeCard('unassigned', cardIndex)" >🗑</button>
+              <button class="delete-button" @click="removeCard('unassigned', cardIndex)" >
+                <svg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><rect width='24' height='24' stroke='none' fill='#000000' opacity='0'/>
+                  <g transform="matrix(1.54 0 0 1.54 12 12)" >
+                    <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" translate(-7.5, -7.5)" d="M 6.496094 1 C 5.675781 1 5 1.675781 5 2.496094 L 5 3 L 2 3 L 2 4 L 3 4 L 3 12.5 C 3 13.324219 3.675781 14 4.5 14 L 10.5 14 C 11.324219 14 12 13.324219 12 12.5 L 12 4 L 13 4 L 13 3 L 10 3 L 10 2.496094 C 10 1.675781 9.324219 1 8.503906 1 Z M 6.496094 2 L 8.503906 2 C 8.785156 2 9 2.214844 9 2.496094 L 9 3 L 6 3 L 6 2.496094 C 6 2.214844 6.214844 2 6.496094 2 Z M 4 4 L 11 4 L 11 12.5 C 11 12.78125 10.78125 13 10.5 13 L 4.5 13 C 4.21875 13 4 12.78125 4 12.5 Z M 5 5 L 5 12 L 6 12 L 6 5 Z M 7 5 L 7 12 L 8 12 L 8 5 Z M 9 5 L 9 12 L 10 12 L 10 5 Z" stroke-linecap="round" />
+                  </g>
+                </svg>
+              </button>
             </div>
           </Draggable>
         </Container>
@@ -22,14 +28,25 @@ import { Container, Draggable } from 'vue3-smooth-dnd'
         <div class="card-column-header">
           <h2 v-if="column.name !== ''">{{ column.name }}</h2>
           <h2 v-else>Column {{columnIndex}}</h2>
-          <button class="delete-button" @click="removeColumn(columnIndex)">🗑</button>
-          <button @click="addCardToColumn(columnIndex)">Add Card</button>
+          <button class="delete-button-column" @click="removeColumn(columnIndex)">
+            <svg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><rect width='24' height='24' stroke='none' fill='#000000' opacity='0'/>
+              <g transform="matrix(1.54 0 0 1.54 12 12)" >
+                <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" translate(-7.5, -7.5)" d="M 6.496094 1 C 5.675781 1 5 1.675781 5 2.496094 L 5 3 L 2 3 L 2 4 L 3 4 L 3 12.5 C 3 13.324219 3.675781 14 4.5 14 L 10.5 14 C 11.324219 14 12 13.324219 12 12.5 L 12 4 L 13 4 L 13 3 L 10 3 L 10 2.496094 C 10 1.675781 9.324219 1 8.503906 1 Z M 6.496094 2 L 8.503906 2 C 8.785156 2 9 2.214844 9 2.496094 L 9 3 L 6 3 L 6 2.496094 C 6 2.214844 6.214844 2 6.496094 2 Z M 4 4 L 11 4 L 11 12.5 C 11 12.78125 10.78125 13 10.5 13 L 4.5 13 C 4.21875 13 4 12.78125 4 12.5 Z M 5 5 L 5 12 L 6 12 L 6 5 Z M 7 5 L 7 12 L 8 12 L 8 5 Z M 9 5 L 9 12 L 10 12 L 10 5 Z" stroke-linecap="round" />
+              </g>
+            </svg>
+          </button>
         </div>
         <Container group-name="col-items" class="col-drag-container" :get-child-payload="getCardPayload(columnIndex)" @drop="(e) => onCardDrop(columnIndex, e)">
           <Draggable v-for="(card, cardIndex) in column.cards" :key="cardIndex">
             <div class="card">
               {{ card.name }}
-              <button class="delete-button" @click="removeCard(columnIndex, cardIndex)">🗑</button>
+              <button class="delete-button" @click="removeCard(columnIndex, cardIndex)">
+                <svg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><rect width='24' height='24' stroke='none' fill='#000000' opacity='0'/>
+                  <g transform="matrix(1.54 0 0 1.54 12 12)" >
+                    <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" translate(-7.5, -7.5)" d="M 6.496094 1 C 5.675781 1 5 1.675781 5 2.496094 L 5 3 L 2 3 L 2 4 L 3 4 L 3 12.5 C 3 13.324219 3.675781 14 4.5 14 L 10.5 14 C 11.324219 14 12 13.324219 12 12.5 L 12 4 L 13 4 L 13 3 L 10 3 L 10 2.496094 C 10 1.675781 9.324219 1 8.503906 1 Z M 6.496094 2 L 8.503906 2 C 8.785156 2 9 2.214844 9 2.496094 L 9 3 L 6 3 L 6 2.496094 C 6 2.214844 6.214844 2 6.496094 2 Z M 4 4 L 11 4 L 11 12.5 C 11 12.78125 10.78125 13 10.5 13 L 4.5 13 C 4.21875 13 4 12.78125 4 12.5 Z M 5 5 L 5 12 L 6 12 L 6 5 Z M 7 5 L 7 12 L 8 12 L 8 5 Z M 9 5 L 9 12 L 10 12 L 10 5 Z" stroke-linecap="round" />
+                  </g>
+                </svg>
+              </button>
             </div>
           </Draggable>
         </Container>
@@ -248,9 +265,27 @@ export default {
   border-radius: 5px;
   min-width: 180px; /* Adjust the value as per your preference */
   min-height: 100px; /* Adjust the value as per your preference */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .delete-button {
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background: none;
+  position: absolute;
+  top: 5px;
+  right: 1px;
+}
+
+.delete-button-column {
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background: none;
 }
 
 .add-card-container {
@@ -281,5 +316,17 @@ export default {
 
 .add-column-container button {
   padding: 5px 10px;
+}
+
+.card-column-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Optional styles */
+.card-column-header h2 {
+  margin-right: 10px;
 }
 </style>
